@@ -104,10 +104,11 @@ class Question(models.Model):
         Course,
         on_delete=models.CASCADE,
         )
-    content = models.CharField(max_length=1000)
-    grade = models.IntegerField(default=50)
+    question_text = models.CharField(max_length=1000)
+    grade = models.IntegerField(default=1)
+
     def __str__(self):
-        return "Question: " + self.content
+        return self.question_text
 
     # method to calculate if the learner gets the score of the question
     def is_get_score(self, selected_ids):
@@ -123,9 +124,16 @@ class Choice(models.Model):
         Question, 
         on_delete=models.CASCADE,
     )
-    content = models.CharField(max_length=500)
+    choice_text = models.CharField(max_length=500)
     is_correct = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.choice_text
+
+
 class Submission(models.Model):
-   enrollment = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
-   choices = models.ManyToManyField(Choice)
+    enrollment = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
+    choices = models.ManyToManyField(Choice)
+
+    def __str__(self):
+        return self.enrollment.user.username + " " + self.enrollment.course.name
